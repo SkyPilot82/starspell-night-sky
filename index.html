@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>STARSPELL — The Night Sky Round</title>
+<style>
+  :root{
+    --ink:#e8e4f4; --dim:#a89fc4; --gold:#ffd77a; --gold-hot:#fff2c9;
+    --bg:#0d1026; --card:#171a38; --card2:#1e2246; --line:#2e3260;
+    --rose:#c96a8e; --good:#7ce08a; --bad:#e07c7c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0d1026 0%,#1a1737 55%,#2b2050 100%);
+    background-attachment:fixed;color:var(--ink);
+    font:16px/1.55 Georgia,"Palatino Linotype",serif;padding-bottom:110px}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px}
+  h1{font-size:34px;margin:8px 0 2px;color:var(--gold-hot);letter-spacing:1px}
+  h1 .star{color:var(--gold)}
+  h2{font-size:22px;color:var(--gold);margin:44px 0 6px;border-bottom:1px solid var(--line);padding-bottom:6px}
+  h3{font-size:17px;margin:0 0 4px;color:var(--gold-hot)}
+  .sub{color:var(--dim);margin:0 0 18px}
+  .prov{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:18px 0;font-size:14.5px;color:var(--dim)}
+  .prov b{color:var(--ink)}
+  .lawbar{background:#241a3d;border:1px solid #4a3a6a;border-radius:10px;padding:10px 16px;margin:14px 0;color:#e0c9f0;font-size:14.5px}
+  .note{font-size:14px;color:var(--dim)}
+  .row{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:20px 0}
+  .card .why{font-size:14.5px;color:var(--dim);margin:6px 0 12px}
+  .heroCol{flex:0 0 auto}
+  .rightCol{flex:1;min-width:280px}
+  .frames{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap}
+  .frames .fr{cursor:pointer;text-align:center}
+  .frames img{display:block;border:2px solid transparent;border-radius:8px;background:#000}
+  .sky .frames img{width:64px;height:128px;object-fit:cover}
+  .logo .frames img{width:128px;height:64px;object-fit:cover}
+  .frames .fr.sel img{border-color:var(--gold)}
+  .frames .fr .fl{font-size:11px;color:var(--dim);margin-top:2px;font-family:Helvetica,sans-serif}
+  .hero{border-radius:10px;display:block;background:#000}
+  .sky .hero{width:190px}
+  .logo .hero{width:420px;max-width:100%}
+  /* the transition test: sky frame (bottom ridge cropped) stacked straight onto the live meadow plate */
+  .stack{width:150px;border-radius:10px;overflow:hidden;background:#000;flex:0 0 auto}
+  .stack .skywin{height:264px;overflow:hidden;position:relative}
+  .stack .skywin img{width:150px;position:absolute;top:0;left:0}
+  .stack img.mp{width:150px;display:block;margin-top:-1px}
+  .stackLbl{font-size:11px;color:var(--dim);text-align:center;margin-top:4px;font-family:Helvetica,sans-serif}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
+  .chip{cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);
+    border-radius:999px;padding:6px 14px;font:14px Georgia,serif;user-select:none}
+  .chip:hover{border-color:var(--gold)}
+  .chip.on{background:var(--gold);color:#221a05;border-color:var(--gold);font-weight:bold}
+  .chip.on.pass{background:#5a3a48;color:#f0d0da;border-color:#8a5a68}
+  textarea{width:100%;background:#101330;border:1px solid var(--line);border-radius:8px;color:var(--ink);
+    font:14px Georgia,serif;padding:8px;min-height:40px;resize:vertical}
+  .promptbox{background:#101330;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+    font:12.5px/1.5 Menlo,monospace;color:#b8b2d8;margin-top:10px;word-break:break-word;display:none}
+  .card.showp .promptbox{display:block}
+  .plink{font-size:12.5px;color:var(--dim);cursor:pointer;text-decoration:underline;font-family:Helvetica,sans-serif}
+  .bar{position:fixed;bottom:0;left:0;right:0;background:rgba(13,16,38,.96);border-top:1px solid var(--line);
+    padding:12px 18px;display:flex;gap:14px;align-items:center;justify-content:center;z-index:50;backdrop-filter:blur(6px)}
+  .bar button{background:var(--gold);border:none;border-radius:10px;padding:10px 22px;font:bold 15px Georgia,serif;
+    color:#221a05;cursor:pointer}
+  .bar .st{font-size:13.5px;color:var(--dim)}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .obs{background:var(--card2);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--dim)}
+  .obs b{color:var(--ink)}
+  a{color:var(--rose)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1><span class="star">✦</span> STARSPELL — The Night Sky Round</h1>
+<p class="sub">2026-10-08 · 6 painted night skies + 6 STARSPELL wordmarks · by Cowboy (Skylar's console)</p>
+
+<div class="prov"><b>Skylar (Skylar's console), 2026-10-08:</b> “When you open starspell right now it goes from the
+night sky down to the meadow. Currently the meadow looks really good but the night sky has blurry stars can we do a
+MJ pass to make a better looking night sky that transitions down to the meadow. Also, can we do a MJ pass for a
+better better looking starspell graphic. MJ is open in a chrome tab you can use that.”</div>
+
+<div class="lawbar">⚠ <b>Nothing here is built.</b> These are MJ options for verdicts. The winning sky still needs
+the usual MJ cutting pass (crop its baked ridge, de-repeat, grade the seam against the meadow plate) and a wiring
+card; the winning wordmark needs a plan for the five shipping languages (the title today is live text, localized —
+a painted wordmark as-is is English-only). This page is unlisted (noindex) but technically public.</div>
+
+<h2>The sky today</h2>
+<div class="row">
+  <img src="today.png" width="190" style="border-radius:10px" alt="current opening">
+  <img src="meadow.png" width="190" style="border-radius:10px" alt="current meadow plate">
+  <div style="flex:1;min-width:260px">
+    <p class="note">Left: what the opening actually looks like (the live game, first frame). The meadow (right, the
+    painted plate you like) is MJ art — but everything above it is <i>procedural</i>: a baked gradient plus ~230
+    soft-edged dot sprites scaled up as "stars". On a phone they read as faint blurry smudges on near-black — that is
+    the complaint, and it's structural: the dot texture is a blurred disc, so no amount of tuning makes it crisp.
+    The fix offered here: paint the whole sky column the way the meadow is painted, in the same flat-vector dusk
+    style (every option below was fired with the meadow plate itself as the Midjourney style anchor, so the palettes
+    match by construction).</p>
+    <p class="note">Each sky card shows <b>the transition test</b>: the candidate stacked straight onto the live
+    meadow plate, bottom ridge cropped — judge the handoff there, not the frame alone.</p>
+  </div>
+</div>
+<div class="grid2" style="margin-top:14px">
+  <div class="obs"><b>What a painted sky changes.</b> Today's stars live on three parallax tiers and twinkle live;
+  a painted plate is one plane. The likely build keeps a thin layer of live twinkle stars + the hero spark-stars on
+  top of the painting, so the sky still breathes — the painting brings the depth and crispness, the engine brings
+  the motion.</div>
+  <div class="obs"><b>The moon, clouds and aurora are engine-drawn too.</b> Options with a baked moon/aurora/clouds
+  would replace those engine pieces (or we crop/avoid them). Options without stay compatible with everything that
+  already moves. Neither is wrong — it's a verdict.</div>
+</div>
+
+<h2 id="skies">A — The night sky <span class="note">(tall plates, zenith → dusk, meadow-anchored)</span></h2>
+<p class="note">Pick a frame on each card — the hero and the transition test follow your pick. Chips + notes stay on
+this device; hit <b>COPY VERDICTS</b> when done. Any direction can be rerolled/upscaled cheaply — if the direction is
+right but the frame isn't, say so in the notes.</p>
+<div id="skyCards"></div>
+
+<h2 id="logos">B — The STARSPELL graphic <span class="note">(the title wordmark)</span></h2>
+<p class="note">Today the title is live text (gold gradient, bevel, sheen) drawn per-language. A painted wordmark is a
+real upgrade in richness — but it ships as English art. Verdict to give along with your pick: English wordmark for
+<i>all</i> languages, or painted English + the current live-text treatment for the other four tongues?</p>
+<div id="logoCards"></div>
+
+<h2>After the verdict</h2>
+<p class="note">Sky winner → re-grab full-res, crop the baked ridge, de-repeat + grade the seam against the meadow
+plate (MJ art is never drop-in), then a build card wires it under the existing twinkle/parallax layer. Wordmark
+winner → upscale + cleanup, then a build card seats it where <code>ssTitleTex</code> renders today, with the
+language ruling applied. Both builds fire only on your go — this page is the design round. The 12 prompts are on the
+cards (“show prompt”) for rerolls.</p>
+
+<script>
+const OPTS=[
+ {id:"S1",kind:"sky",slug:"sky1-plain",name:"The Quiet Night",hero:3,
+  why:"The straight answer to the complaint: the same gradient the game has, but painted — crisp pinpoint stars, clean dusk band, nothing that fights the engine's moon/aurora/clouds. The safest cut and the easiest seam.",
+  prompt:"flat vector illustration, tall vertical night sky backdrop for a mobile game, deep indigo zenith dense with crisp pinpoint stars, gradient falling through violet twilight into a warm rose dusk glow at the very bottom, no ground, no mountains, no horizon, clean flat color shapes, subtle grain --ar 1:2 --sref meadow.png"},
+ {id:"S2",kind:"sky",slug:"sky2-milkyway",name:"The Milky Way",hero:0,
+  why:"A luminous galactic band sweeping the column — the most dramatic sky of the six, and the one that makes the ascent feel like a journey. The band is a big baked feature: it will be visible behind the home UI, so judge it with that in mind.",
+  prompt:"flat vector illustration, tall vertical night sky backdrop, a luminous milky way band sweeping diagonally through a field of crisp sharp stars, deep indigo fading through violet into a warm rose dusk glow at the very bottom, no ground, no mountains, clean flat color shapes --ar 1:2 --sref meadow.png"},
+ {id:"S3",kind:"sky",slug:"sky3-aurora",name:"The Aurora",hero:2,
+  why:"Teal-and-violet curtains high in the sky. The game already draws a faint procedural aurora — this bakes a much bolder one. Striking, but the loudest option: the curtains sit where battle UI lives at the zenith.",
+  prompt:"flat vector illustration, tall vertical night sky backdrop, soft teal and violet aurora curtains high in a deep indigo sky full of crisp pinpoint stars, gradient into a warm rose dusk glow at the very bottom, no ground, no mountains, clean flat shapes --ar 1:2 --sref meadow.png"},
+ {id:"S4",kind:"sky",slug:"sky4-constellations",name:"The Drawn Constellations",hero:0,
+  why:"Faint thin-line constellation figures among the stars — the game IS constellations, so the sky quietly says so. The lines came out subtle (frame 0 shows them best); a reroll can push them brighter gold if the direction wins.",
+  prompt:"flat vector illustration, tall vertical night sky backdrop, faint elegant constellation figures drawn with thin gold lines between bright crisp stars, deep indigo zenith fading through violet to a warm rose dusk glow at the bottom, no ground, no mountains, clean flat shapes --ar 1:2 --sref meadow.png"},
+ {id:"S5",kind:"sky",slug:"sky5-shooting",name:"The Wishing Sky",hero:1,
+  why:"Slender shooting-star trails + radiant four-point spark stars — the sky a player would wish on. The baked trails are a one-moment feature frozen forever; charming on the opening, possibly odd once you've seen it nightly.",
+  prompt:"flat vector illustration, tall vertical night sky backdrop, two slender shooting stars with clean tapered trails among crisp pinpoint stars and a few radiant four-point sparkle stars, deep indigo fading to a warm rose dusk glow at the bottom, no ground, no mountains --ar 1:2 --sref meadow.png"},
+ {id:"S6",kind:"sky",slug:"sky6-moon",name:"The Moonlit Clouds",hero:0,
+  why:"Crescent moon + moonlit cloud banks. Cozy and storybook — but it bakes a moon (the engine draws its own, lower) and the heaviest clouds of the set; the engine's drifting wisps would retire. The biggest departure from today's look.",
+  prompt:"flat vector illustration, tall vertical night sky backdrop, a slim golden crescent moon high in a deep indigo sky, a few wispy dark clouds with moonlit edges, crisp pinpoint stars, gradient to a warm rose dusk glow at the very bottom, no ground, no mountains --ar 1:2 --sref meadow.png"},
+ {id:"L1",kind:"logo",slug:"logo1-gilded",name:"The Gilded Marquee",hero:2,
+  why:"Bold gold serif with a navy rim and sparkle tips — the most 'store-ready' of the set, reads at any size, closest kin to the Golden-S icon you picked in September. Spelled clean in all four frames.",
+  prompt:"ornate gilded game logo, the word \"STARSPELL\" in elegant golden serif letters with a navy rim and a warm glow, tiny four-point sparkles at the letter tips, deep indigo night sky background, storybook fantasy title treatment, clean vector shapes --ar 2:1"},
+ {id:"L2",kind:"logo",slug:"logo2-constellation",name:"The Constellation Letters",hero:0,
+  why:"The word written as star-points joined by thin gold lines — the game's whole idea in one graphic. Thinner and quieter than the others; judge it at phone size on the hero.",
+  prompt:"the word \"STARSPELL\" written as constellations, each letter formed from bright stars joined by thin golden lines, deep midnight blue sky background, magical glittering game title logo --ar 2:1"},
+ {id:"L3",kind:"logo",slug:"logo3-calligraphy",name:"The Golden Hand",hero:1,
+  why:"Hand-lettered gold calligraphy with a gentle arch and a stardust swirl — warm, friendly, the most 'casual word game' of the set. The arch echoes what the live-text title already does.",
+  prompt:"the word \"STARSPELL\" in hand-lettered golden fantasy calligraphy with a gentle arch, trailing stardust sparkles, deep twilight purple background, mobile game title logo, warm glow --ar 2:1"},
+ {id:"L4",kind:"logo",slug:"logo4-filigree",name:"The Filigree Plate",hero:1,
+  why:"Slimmer gold caps dressed with celestial filigree above and below — elegant, bookish, the quietest treatment. The flourishes would crop out cleanly if only the lettering is wanted.",
+  prompt:"the word \"STARSPELL\" in bold gold letters decorated with celestial filigree flourishes, small stars tucked between the letters, rich storybook game logo on a dark night sky --ar 2:1"},
+ {id:"L5",kind:"logo",slug:"logo5-comet",name:"The Comet Underline",hero:2,
+  why:"Bold letters over a comet swoosh that underlines the word in sparks — energetic, the most 'game' of the set. The swoosh doubles as a natural home for the home-screen sparkle anchors.",
+  prompt:"the word \"STARSPELL\" as glowing enchanted lettering, golden light with drifting sparkles and a comet swoosh beneath, night sky backdrop, polished mobile game title --ar 2:1"},
+ {id:"L6",kind:"logo",slug:"logo6-flatvector",name:"The Title in the Meadow",hero:1,
+  why:"The honesty option: fired with the meadow anchor, it came back as a title card — small quiet letters over the game's own dusk landscape. Weak as a standalone wordmark, included because it's the one locked to the game's palette; could serve a splash/loading screen rather than the title.",
+  prompt:"flat vector illustration, the word \"STARSPELL\" in warm gold lettering over a pink and violet dusk gradient with crisp stars, game title logo, clean flat shapes --ar 2:1 --sref meadow.png"}
+];
+const FR=["v1","v2","v3","v4"];
+let DB={}; try{DB=JSON.parse(localStorage.getItem("ssnight.v1")||"{}");}catch(e){}
+function save(id,k,v){DB[id]=DB[id]||{};DB[id][k]=v;localStorage.setItem("ssnight.v1",JSON.stringify(DB));paintCount();}
+const src=(o,f)=>"mj/"+o.slug+"-"+f+".webp";
+
+OPTS.forEach(o=>{
+ const st=DB[o.id]||{};
+ const f=st.frame!=null?st.frame:o.hero;
+ const card=document.createElement("div");
+ card.className="card "+o.kind;
+ const framesHtml='<div class="frames">'+[0,1,2,3].map(n=>
+   `<div class="fr ${n===f?"sel":""}" data-n="${n}"><img src="${src(o,n)}" loading="lazy"><div class="fl">${FR[n]}</div></div>`).join("")+"</div>";
+ const stackHtml=o.kind==="sky"
+   ? `<div><div class="stack"><div class="skywin"><img class="hsky" src="${src(o,f)}"></div><img class="mp" src="meadow.png"></div><div class="stackLbl">the transition test</div></div>`
+   : "";
+ card.innerHTML=`
+  <div class="row">
+    <div class="heroCol"><img class="hero" src="${src(o,f)}" loading="lazy"></div>
+    ${stackHtml}
+    <div class="rightCol">
+      <h3>${o.id} · ${o.name}</h3>
+      <div class="why">${o.why} <span class="plink">show prompt</span></div>
+      <div class="promptbox">${o.prompt.replace(/</g,"&lt;")}</div>
+      ${framesHtml}
+      <div class="chips" data-opt="${o.id}">
+        <div class="chip ${st.v==="THE ONE"?"on":""}" data-v="THE ONE">⭐ THE ONE</div>
+        <div class="chip ${st.v==="SHORTLIST"?"on":""}" data-v="SHORTLIST">👍 SHORTLIST</div>
+        <div class="chip ${st.v==="PASS"?"on pass":""}" data-v="PASS">👎 PASS</div>
+      </div>
+      <textarea placeholder="notes… (what to change, what to keep)" data-notes="${o.id}">${st.n||""}</textarea>
+    </div>
+  </div>`;
+ document.getElementById(o.kind==="sky"?"skyCards":"logoCards").appendChild(card);
+
+ card.querySelectorAll(".fr").forEach(fr=>fr.addEventListener("click",()=>{
+   const n=+fr.dataset.n;
+   card.querySelectorAll(".fr").forEach(x=>x.classList.toggle("sel",+x.dataset.n===n));
+   card.querySelector(".hero").src=src(o,n);
+   const hs=card.querySelector(".hsky"); if(hs)hs.src=src(o,n);
+   save(o.id,"frame",n);
+ }));
+ card.querySelector(".plink").addEventListener("click",()=>card.classList.toggle("showp"));
+ card.querySelectorAll(".chip").forEach(ch=>ch.addEventListener("click",()=>{
+   const cur=DB[o.id]&&DB[o.id].v;
+   const nv=cur===ch.dataset.v?null:ch.dataset.v;
+   card.querySelectorAll(".chip").forEach(x=>{x.classList.remove("on","pass");
+     if(nv&&x.dataset.v===nv){x.classList.add("on");if(nv==="PASS")x.classList.add("pass");}});
+   save(o.id,"v",nv);
+ }));
+ card.querySelector("textarea").addEventListener("input",e=>save(o.id,"n",e.target.value));
+});
+
+function paintCount(){
+ const n=OPTS.filter(o=>DB[o.id]&&DB[o.id].v).length;
+ document.getElementById("vcount").textContent=n+" / "+OPTS.length+" judged";
+}
+function copyVerdicts(){
+ const lines=["STARSPELL night-sky round — verdicts ("+new Date().toISOString().slice(0,10)+")"];
+ OPTS.forEach(o=>{
+   const st=DB[o.id]||{};if(!st.v&&!st.n)return;
+   let l=o.id+" "+o.name+": "+(st.v||"(no verdict)")+" [frame v"+((st.frame!=null?st.frame:o.hero)+1)+"]";
+   if(st.n)l+=" — "+st.n.replace(/\n/g," / ");
+   lines.push(l);
+ });
+ if(lines.length===1)lines.push("(nothing judged yet)");
+ const txt=lines.join("\n");
+ const done=()=>{const b=document.getElementById("copyBtn");b.textContent="COPIED ✓";setTimeout(()=>b.textContent="COPY VERDICTS",1600);};
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,()=>fallback(txt,done));}
+ else fallback(txt,done);
+}
+function fallback(txt,done){const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);
+ ta.select();try{document.execCommand("copy");done();}catch(e){alert(txt);}document.body.removeChild(ta);}
+</script>
+<div class="bar">
+  <span class="st" id="vcount"></span>
+  <button id="copyBtn" onclick="copyVerdicts()">COPY VERDICTS</button>
+  <span class="st">chips &amp; notes stay on this device</span>
+</div>
+<script>paintCount();</script>
+</div>
+</body>
+</html>
