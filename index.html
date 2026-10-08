@@ -40,12 +40,18 @@
   .hero{border-radius:10px;display:block;background:#000}
   .sky .hero{width:190px}
   .logo .hero{width:420px;max-width:100%}
-  /* the transition test: sky frame (bottom ridge cropped) stacked straight onto the live meadow plate */
+  /* the transition test: the frame's SEAM CUT (cropped just above its baked
+     ridge, per-frame) stacked straight onto the live meadow plate — the same
+     cut the real build makes, so what you see at the seam is what ships */
   .stack{width:150px;border-radius:10px;overflow:hidden;background:#000;flex:0 0 auto}
-  .stack .skywin{height:264px;overflow:hidden;position:relative}
-  .stack .skywin img{width:150px;position:absolute;top:0;left:0}
-  .stack img.mp{width:150px;display:block;margin-top:-1px}
+  .stack img{width:150px;display:block}
+  .stack img.mp{margin-top:-1px}
   .stackLbl{font-size:11px;color:var(--dim);text-align:center;margin-top:4px;font-family:Helvetica,sans-serif}
+  /* the pulled text: draft alpha cut over a checkerboard, no background */
+  .pull{margin-top:10px;border-radius:10px;padding:14px;
+    background:repeating-conic-gradient(#2a2a3a 0% 25%, #3a3a4e 0% 50%) 0 0/24px 24px}
+  .pull img{width:100%;display:block}
+  .pullLbl{font-size:11px;color:var(--dim);margin-top:4px;font-family:Helvetica,sans-serif}
   .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
   .chip{cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink);
     border-radius:999px;padding:6px 14px;font:14px Georgia,serif;user-select:none}
@@ -98,7 +104,11 @@ a painted wordmark as-is is English-only). This page is unlisted (noindex) but t
     style (every option below was fired with the meadow plate itself as the Midjourney style anchor, so the palettes
     match by construction).</p>
     <p class="note">Each sky card shows <b>the transition test</b>: the candidate stacked straight onto the live
-    meadow plate, bottom ridge cropped — judge the handoff there, not the frame alone.</p>
+    meadow plate. Every MJ frame grew a small dark silhouette ridge at its foot despite the prompt — <b>that ridge is
+    cut, per frame, just above its tallest peak</b> (the first version of this page used one crude fixed crop, which
+    left a black band at the seam on most frames — that band was the preview's bug, not the design's; it will NOT
+    exist in the game). What remains is rose dusk meeting the meadow's own glow — the final cut blends the last few
+    rows so the value step disappears entirely.</p>
   </div>
 </div>
 <div class="grid2" style="margin-top:14px">
@@ -118,9 +128,12 @@ right but the frame isn't, say so in the notes.</p>
 <div id="skyCards"></div>
 
 <h2 id="logos">B — The STARSPELL graphic <span class="note">(the title wordmark)</span></h2>
-<p class="note">Today the title is live text (gold gradient, bevel, sheen) drawn per-language. A painted wordmark is a
-real upgrade in richness — but it ships as English art. Verdict to give along with your pick: English wordmark for
-<i>all</i> languages, or painted English + the current live-text treatment for the other four tongues?</p>
+<p class="note">Only the text ships — the night backgrounds are MJ's canvas, not part of the asset. Each card now
+shows <b>the pulled text</b>: a draft alpha cut over a checkerboard, letters + their sparkles only, background gone.
+These pulls are automated drafts; the winner gets a hand-authored mask (stray star specks cleaned, glow edges tuned)
+before it touches the game. Today the title is live text (gold gradient, bevel, sheen) drawn per-language — verdict
+to give along with your pick: English wordmark for <i>all</i> languages, or painted English + the current live-text
+treatment for the other four tongues?</p>
 <div id="logoCards"></div>
 
 <h2>After the verdict</h2>
@@ -165,7 +178,7 @@ const OPTS=[
  {id:"L5",kind:"logo",slug:"logo5-comet",name:"The Comet Underline",hero:2,
   why:"Bold letters over a comet swoosh that underlines the word in sparks — energetic, the most 'game' of the set. The swoosh doubles as a natural home for the home-screen sparkle anchors.",
   prompt:"the word \"STARSPELL\" as glowing enchanted lettering, golden light with drifting sparkles and a comet swoosh beneath, night sky backdrop, polished mobile game title --ar 2:1"},
- {id:"L6",kind:"logo",slug:"logo6-flatvector",name:"The Title in the Meadow",hero:1,
+ {id:"L6",kind:"logo",slug:"logo6-flatvector",name:"The Title in the Meadow",hero:1,nopull:true,
   why:"The honesty option: fired with the meadow anchor, it came back as a title card — small quiet letters over the game's own dusk landscape. Weak as a standalone wordmark, included because it's the one locked to the game's palette; could serve a splash/loading screen rather than the title.",
   prompt:"flat vector illustration, the word \"STARSPELL\" in warm gold lettering over a pink and violet dusk gradient with crisp stars, game title logo, clean flat shapes --ar 2:1 --sref meadow.png"}
 ];
@@ -173,6 +186,8 @@ const FR=["v1","v2","v3","v4"];
 let DB={}; try{DB=JSON.parse(localStorage.getItem("ssnight.v1")||"{}");}catch(e){}
 function save(id,k,v){DB[id]=DB[id]||{};DB[id][k]=v;localStorage.setItem("ssnight.v1",JSON.stringify(DB));paintCount();}
 const src=(o,f)=>"mj/"+o.slug+"-"+f+".webp";
+const cutsrc=(o,f)=>"mj/cut/"+o.slug+"-"+f+".webp";
+const pullsrc=(o,f)=>"mj/cut/"+o.slug+"-"+f+"-text.png";
 
 OPTS.forEach(o=>{
  const st=DB[o.id]||{};
@@ -182,7 +197,12 @@ OPTS.forEach(o=>{
  const framesHtml='<div class="frames">'+[0,1,2,3].map(n=>
    `<div class="fr ${n===f?"sel":""}" data-n="${n}"><img src="${src(o,n)}" loading="lazy"><div class="fl">${FR[n]}</div></div>`).join("")+"</div>";
  const stackHtml=o.kind==="sky"
-   ? `<div><div class="stack"><div class="skywin"><img class="hsky" src="${src(o,f)}"></div><img class="mp" src="meadow.png"></div><div class="stackLbl">the transition test</div></div>`
+   ? `<div><div class="stack"><img class="hsky" src="${cutsrc(o,f)}"><img class="mp" src="meadow.png"></div><div class="stackLbl">the transition test (seam-cut)</div></div>`
+   : "";
+ const pullHtml=o.kind==="logo"
+   ? (o.nopull
+     ? `<div class="pullLbl" style="margin-top:10px">no pulled text for this one — the letters are part of the painted scene, too small to cut; it's a splash-screen direction, not a wordmark.</div>`
+     : `<div class="pull"><img class="hpull" src="${pullsrc(o,f)}" loading="lazy"></div><div class="pullLbl">the pulled text — draft alpha cut, background gone (winner gets a hand-finished mask)</div>`)
    : "";
  card.innerHTML=`
   <div class="row">
@@ -193,6 +213,7 @@ OPTS.forEach(o=>{
       <div class="why">${o.why} <span class="plink">show prompt</span></div>
       <div class="promptbox">${o.prompt.replace(/</g,"&lt;")}</div>
       ${framesHtml}
+      ${pullHtml}
       <div class="chips" data-opt="${o.id}">
         <div class="chip ${st.v==="THE ONE"?"on":""}" data-v="THE ONE">⭐ THE ONE</div>
         <div class="chip ${st.v==="SHORTLIST"?"on":""}" data-v="SHORTLIST">👍 SHORTLIST</div>
@@ -207,7 +228,8 @@ OPTS.forEach(o=>{
    const n=+fr.dataset.n;
    card.querySelectorAll(".fr").forEach(x=>x.classList.toggle("sel",+x.dataset.n===n));
    card.querySelector(".hero").src=src(o,n);
-   const hs=card.querySelector(".hsky"); if(hs)hs.src=src(o,n);
+   const hs=card.querySelector(".hsky"); if(hs)hs.src=cutsrc(o,n);
+   const hp=card.querySelector(".hpull"); if(hp)hp.src=pullsrc(o,n);
    save(o.id,"frame",n);
  }));
  card.querySelector(".plink").addEventListener("click",()=>card.classList.toggle("showp"));
